@@ -2,6 +2,7 @@ from google.adk.agents import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
 from google.adk.tools import google_search
 from google.adk.tools.agent_tool import AgentTool
+from a2a_calendar_tool import a2a_calendar_check
 
 import os
 from dotenv import load_dotenv
@@ -11,11 +12,12 @@ load_dotenv()
 
 def create_orchestrator():
     """
-    Foreman v1.2 ENHANCED - SOLUZIONE FINALE
+    Foreman v1.3 A2A ENHANCED - MILESTONE A2A RAGGIUNTO!
 
     ✅ AgentTool per google_search (risolve issue #134)
     ✅ MCP con encoding robusto (risolve UTF-8 errors)
-    ✅ Architettura stabile e testata
+    ✅ A2A Calendar Agent integration (primo agente A2A)
+    ✅ Architettura multi-agent distribuita funzionante
     """
 
     # ═══════════════════════════════════════════════════════════════
@@ -63,19 +65,22 @@ def create_orchestrator():
     )
 
     # ═══════════════════════════════════════════════════════════════
-    # ORCHESTRATORE PRINCIPALE ENHANCED
+    # ORCHESTRATORE PRINCIPALE v1.3 A2A ENHANCED
     # ═══════════════════════════════════════════════════════════════
     orchestrator = LlmAgent(
         name="Foreman",
         model="gemini-2.0-flash",
         instruction=f"""
-        Sei Foreman v1.2 ENHANCED, un assistente intelligente perfettamente funzionante.
+        Sei Foreman v1.3 A2A ENHANCED, il primo orchestratore multi-agent con A2A protocol!
+
+        🚀 NUOVA CAPACITÀ A2A: Ora puoi comunicare con agenti A2A specializzati!
 
         STRUMENTI DISPONIBILI:
         1. GoogleSearchAgent: per ricerche web e informazioni aggiornate online
         2. MCPToolset: per operazioni su file/directory in {work_directory}
+        3. 🆕 A2ACalendarTool: per comunicare con Calendar Agent via A2A protocol
 
-        DECISION LOGIC INTELLIGENTE:
+        DECISION LOGIC INTELLIGENTE v1.3:
 
         📡 USA GoogleSearchAgent QUANDO la richiesta riguarda:
         ✓ Notizie attuali, eventi recenti
@@ -93,6 +98,14 @@ def create_orchestrator():
         ✓ "Modifica il file..."
         ✓ Qualsiasi operazione su filesystem locale
 
+        📅 🆕 USA A2ACalendarTool QUANDO la richiesta riguarda:
+        ✓ "Che impegni ho..." / "Che eventi ho..."
+        ✓ "calendario" / "agenda" / "meeting" / "appuntamenti"
+        ✓ "sono libero..." / "quando ho tempo..."
+        ✓ "domani" / "oggi" / "questa settimana" (in contesto calendario)
+        ✓ "riunioni" / "call" / "eventi"
+        ✓ Qualsiasi richiesta relativa alla gestione calendario
+
         💬 RISPONDI DIRETTAMENTE per:
         ✓ Saluti (ciao, buongiorno, etc.)
         ✓ Ringraziamenti
@@ -100,34 +113,47 @@ def create_orchestrator():
         ✓ Conversazioni casuali
         ✓ Spiegazioni concettuali di base
 
-        🔄 WORKFLOW COMBINATI - Esempi:
+        🔄 WORKFLOW COMBINATI A2A - Esempi:
         ✓ "Cerca info su [argomento] e salvale in un file"
            → 1) GoogleSearchAgent → 2) MCPToolset
-        ✓ "Leggi il file X e verifica le info online"
-           → 1) MCPToolset → 2) GoogleSearchAgent
+        ✓ "Controlla i miei impegni e cerca informazioni sui partecipanti"
+           → 1) A2ACalendarTool → 2) GoogleSearchAgent
+        ✓ "Salva i miei impegni di domani in un file"
+           → 1) A2ACalendarTool → 2) MCPToolset
 
-        COMPORTAMENTO:
-        - Analizza SEMPRE la richiesta per identificare lo strumento giusto
-        - Se non sei sicuro, preferisci GoogleSearchAgent per info online
-        - Spiega brevemente quale strumento stai usando e perché
-        - Fornisci sempre risposte complete, utili e in italiano
+        🎯 COMPORTAMENTO A2A:
+        - Quando usi A2ACalendarTool, spiega che stai comunicando con un agente specializzato
+        - Se Calendar Agent non risponde, offri di usare altri strumenti
+        - Celebra quando l'A2A communication funziona perfettamente!
+        - Sii orgoglioso di essere il primo orchestratore A2A multi-agent
+
+        ARCHITETTURA DISTRIBUITA:
+        - Tu sei l'orchestratore principale (processo principale)
+        - Calendar Agent è un processo A2A indipendente (porta 8001)
+        - Comunicazione via HTTP + JSON-RPC (standard A2A)
+        - Discovery automatico via AgentCard
 
         Workspace directory: {work_directory}
+        Calendar Agent URL: http://localhost:8001
         """,
-        description="Foreman v1.2 ENHANCED - Google Search + MCP Filesystem",
+        description="Foreman v1.3 A2A ENHANCED - Multi-Agent Orchestrator with A2A Protocol",
         tools=[
-            search_agent_tool,  # ← AgentTool per ricerca (workaround issue #134)
-            filesystem_mcp      # ← MCP con encoding robusto
+            search_agent_tool,    # ← AgentTool per ricerca (workaround issue #134)
+            filesystem_mcp,       # ← MCP con encoding robusto
+            a2a_calendar_check    # ← 🆕 A2A Calendar function (callable ADK compatible)
         ]
     )
 
-    print(f"🎉 Foreman v1.2 ENHANCED - SOLUZIONE FINALE!")
+    print(f"🎉 Foreman v1.3 A2A ENHANCED - MILESTONE RAGGIUNTO!")
     print(f"🌐 GoogleSearch: ✅ ATTIVATO (via AgentTool workaround)")
     print(f"📁 MCP Filesystem: ✅ ATTIVATO (encoding robusto)")
+    print(f"📅 A2A Calendar Agent: ✅ ATTIVATO (callable function, ADK compatible)")
     print(f"🧠 Modello: gemini-2.0-flash")
-    print(f"🔧 Issues risolti: #134 (function calling) + UTF-8 encoding")
+    print(f"🏗️ Architettura: Multi-Agent A2A Protocol")
+    print(f"🔧 Issues risolti: #134 (function calling) + UTF-8 encoding + A2A integration")
     print(f"📁 Workspace: {work_directory}")
-    print(f"✨ Ready for production use!")
+    print(f"📅 Calendar Agent: http://localhost:8001")
+    print(f"✨ Ready for distributed multi-agent workflows!")
 
     return orchestrator
 
@@ -140,7 +166,7 @@ def get_adk_version():
         return 'unknown'
 
 # ═══════════════════════════════════════════════════════════════════════
-# UTILITY FUNCTIONS per testing e debug
+# UTILITY FUNCTIONS per testing e debug A2A
 # ═══════════════════════════════════════════════════════════════════════
 
 def test_workspace_encoding():
@@ -165,7 +191,18 @@ def test_workspace_encoding():
         print(f"❌ Workspace encoding test FAILED: {e}")
         return False
 
+def test_a2a_calendar_connectivity():
+    """Test connettività con Calendar Agent A2A"""
+    import asyncio
+    from a2a_calendar_tool import test_calendar_agent_connectivity
+
+    return asyncio.run(test_calendar_agent_connectivity())
+
 if __name__ == "__main__":
     # Test rapido se eseguito direttamente
-    print("🧪 Testing workspace encoding...")
+    print("🧪 Testing Foreman v1.3 A2A ENHANCED components...")
+    print("\n1. Workspace encoding test:")
     test_workspace_encoding()
+    print("\n2. A2A Calendar Agent connectivity test:")
+    test_a2a_calendar_connectivity()
+    print("\n🎯 Foreman v1.3 A2A ENHANCED ready!")
