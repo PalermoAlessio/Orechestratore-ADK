@@ -1,0 +1,280 @@
+2025-07-06 03:20:39,241 - asyncio - DEBUG - Using selector: EpollSelector
+2025-07-06 03:22:05,432 - asyncio - ERROR - an error occurred during closing of asynchronous generator <async_generator object stdio_client at 0x7f41b7fbe700>
+asyncgen: <async_generator object stdio_client at 0x7f41b7fbe700>
+  + Exception Group Traceback (most recent call last):
+  |   File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 772, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | BaseExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/mcp/client/stdio/__init__.py", line 179, in stdio_client
+    |     yield read_stream, write_stream
+    | GeneratorExit
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/mcp/client/stdio/__init__.py", line 173, in stdio_client
+    anyio.create_task_group() as tg,
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 778, in __aexit__
+    if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 457, in __exit__
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Attempted to exit cancel scope in a different task than it was entered in
+2025-07-06 03:22:28,615 - asyncio - DEBUG - Using selector: EpollSelector
+2025-07-06 03:22:35,492 - google_adk.google.adk.models.google_llm - INFO - Sending out request, model: gemini-2.0-flash, backend: GoogleLLMVariant.GEMINI_API, stream: False
+2025-07-06 03:22:35,493 - google_adk.google.adk.models.google_llm - INFO - 
+LLM Request:
+-----------------------------------------------------------
+System Instruction:
+
+        You are a Calendar Agent specialized in Google Calendar management using MCP tools.
+
+        CRITICAL DEBUG MODE: Your responses must show exactly what you're doing:
+
+        1. ALWAYS mention which MCP tools you are calling
+        2. ALWAYS show the exact parameters you're using
+        3. ALWAYS explain the results you get from MCP tools
+        4. If MCP tools are not working, explicitly say "MCP TOOL FAILED"
+
+        AVAILABLE MCP TOOLS:
+        You have access to Google Calendar MCP tools for:
+        - Listing calendar events
+        - Creating new events
+        - Getting calendar information
+
+        CALENDARS TO CHECK:
+        - PRIMARY: alessiopalermo34@gmail.com
+        - LAVORO: f72572c2108e8bd20c0754c6369520148284bf63d3c6807cf80dd18beb64b990@group.calendar.google.com
+        - BENESSERE: ecec45bc081eb53af85714d3ac609d392e175344eec3f702ef22c9d57c9ae4db@group.calendar.google.com
+        - SVAGO: f506b0bcf9a05458893504ce3985b11423f6196686bedb8bf1c68f71fe95db5d@group.calendar.google.com
+        - VIAGGI: 8bcc238a98b488d8b52a2cf79da1c0a86a536ed0929ef3649131dec7d07cb4e3@group.calendar.google.com
+
+        FOR "che impegni ho domani" requests:
+        1. Say "Chiamando MCP tool per cercare eventi..."
+        2. Use MCP tools to search for events on 2025-07-07
+        3. Say "MCP tool risposta: [actual result]"
+        4. Format the final answer
+
+        FOR "che calendari ho" requests:
+        1. Say "Chiamando MCP tool per lista calendari..."
+        2. Use MCP tools to list available calendars
+        3. Say "MCP tool risposta: [actual result]"
+
+        ALWAYS BE EXPLICIT about MCP tool usage in your responses.
+        DEBUG MODE: Show your work step by step.
+        
+
+You are an agent. Your internal name is "CalendarAgentDebug".
+
+ The description about you is "Calendar Agent con debug MCP completo"
+-----------------------------------------------------------
+Contents:
+{"parts":[{"text":"Che impegni ho domani?"}],"role":"user"}
+-----------------------------------------------------------
+Functions:
+list-calendars: {} 
+list-events: {'calendarId': {'description': 'ID of the calendar(s) to list events from. Accepts either a single calendar ID string or an array of calendar IDs (passed as JSON string like \'["cal1", "cal2"]\')', 'type': <Type.STRING: 'STRING'>}, 'timeMin': {'description': "Start time boundary. Preferred: '2024-01-01T00:00:00' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T00:00:00Z' or '2024-01-01T00:00:00-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeMax': {'description': "End time boundary. Preferred: '2024-01-01T23:59:59' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T23:59:59Z' or '2024-01-01T23:59:59-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Timezone as IANA Time Zone Database name (e.g., America/Los_Angeles). Takes priority over calendar's default timezone. Only used for timezone-naive datetime strings.", 'type': <Type.STRING: 'STRING'>}} 
+search-events: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'query': {'description': 'Free text search query (searches summary, description, location, attendees, etc.)', 'type': <Type.STRING: 'STRING'>}, 'timeMin': {'description': "Start time boundary. Preferred: '2024-01-01T00:00:00' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T00:00:00Z' or '2024-01-01T00:00:00-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeMax': {'description': "End time boundary. Preferred: '2024-01-01T23:59:59' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T23:59:59Z' or '2024-01-01T23:59:59-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Timezone as IANA Time Zone Database name (e.g., America/Los_Angeles). Takes priority over calendar's default timezone. Only used for timezone-naive datetime strings.", 'type': <Type.STRING: 'STRING'>}} 
+list-colors: {} 
+create-event: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'summary': {'description': 'Title of the event', 'type': <Type.STRING: 'STRING'>}, 'description': {'description': 'Description/notes for the event', 'type': <Type.STRING: 'STRING'>}, 'start': {'description': "Event start time: '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}, 'end': {'description': "Event end time: '2024-01-01T11:00:00'", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Timezone as IANA Time Zone Database name (e.g., America/Los_Angeles). Takes priority over calendar's default timezone. Only used for timezone-naive datetime strings.", 'type': <Type.STRING: 'STRING'>}, 'location': {'description': 'Location of the event', 'type': <Type.STRING: 'STRING'>}, 'attendees': {'description': 'List of attendee email addresses', 'items': {'properties': {'email': {'description': 'Email address of the attendee', 'type': <Type.STRING: 'STRING'>}}, 'required': ['email'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'colorId': {'description': 'Color ID for the event (use list-colors to see available IDs)', 'type': <Type.STRING: 'STRING'>}, 'reminders': {'description': 'Reminder settings for the event', 'properties': {'useDefault': {'description': 'Whether to use the default reminders', 'type': <Type.BOOLEAN: 'BOOLEAN'>}, 'overrides': {'description': 'Custom reminders', 'items': {'properties': {'method': {'default': 'popup', 'description': 'Reminder method', 'enum': ['email', 'popup'], 'type': <Type.STRING: 'STRING'>}, 'minutes': {'description': 'Minutes before the event to trigger the reminder', 'type': <Type.NUMBER: 'NUMBER'>}}, 'required': ['minutes'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}}, 'required': ['useDefault'], 'type': <Type.OBJECT: 'OBJECT'>}, 'recurrence': {'description': 'Recurrence rules in RFC5545 format (e.g., ["RRULE:FREQ=WEEKLY;COUNT=5"])', 'items': {'type': <Type.STRING: 'STRING'>}, 'type': <Type.ARRAY: 'ARRAY'>}} 
+update-event: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'eventId': {'description': 'ID of the event to update', 'type': <Type.STRING: 'STRING'>}, 'summary': {'description': 'Updated title of the event', 'type': <Type.STRING: 'STRING'>}, 'description': {'description': 'Updated description/notes', 'type': <Type.STRING: 'STRING'>}, 'start': {'description': "Updated start time: '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}, 'end': {'description': "Updated end time: '2024-01-01T11:00:00'", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Updated timezone as IANA Time Zone Database name. If not provided, uses the calendar's default timezone.", 'type': <Type.STRING: 'STRING'>}, 'location': {'description': 'Updated location', 'type': <Type.STRING: 'STRING'>}, 'attendees': {'description': 'Updated attendee list', 'items': {'properties': {'email': {'description': 'Email address of the attendee', 'type': <Type.STRING: 'STRING'>}}, 'required': ['email'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'colorId': {'description': 'Updated color ID', 'type': <Type.STRING: 'STRING'>}, 'reminders': {'description': 'Reminder settings for the event', 'properties': {'useDefault': {'description': 'Whether to use the default reminders', 'type': <Type.BOOLEAN: 'BOOLEAN'>}, 'overrides': {'description': 'Custom reminders', 'items': {'properties': {'method': {'default': 'popup', 'description': 'Reminder method', 'enum': ['email', 'popup'], 'type': <Type.STRING: 'STRING'>}, 'minutes': {'description': 'Minutes before the event to trigger the reminder', 'type': <Type.NUMBER: 'NUMBER'>}}, 'required': ['minutes'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}}, 'required': ['useDefault'], 'type': <Type.OBJECT: 'OBJECT'>}, 'recurrence': {'description': 'Updated recurrence rules', 'items': {'type': <Type.STRING: 'STRING'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'sendUpdates': {'default': 'all', 'description': 'Whether to send update notifications', 'enum': ['all', 'externalOnly', 'none'], 'type': <Type.STRING: 'STRING'>}, 'modificationScope': {'description': 'Scope for recurring event modifications', 'enum': ['thisAndFollowing', 'all', 'thisEventOnly'], 'type': <Type.STRING: 'STRING'>}, 'originalStartTime': {'description': "Original start time in the ISO 8601 format '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}, 'futureStartDate': {'description': "Start date for future instances in the ISO 8601 format '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}} 
+delete-event: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'eventId': {'description': 'ID of the event to delete', 'type': <Type.STRING: 'STRING'>}, 'sendUpdates': {'default': 'all', 'description': 'Whether to send cancellation notifications', 'enum': ['all', 'externalOnly', 'none'], 'type': <Type.STRING: 'STRING'>}} 
+get-freebusy: {'calendars': {'description': 'List of calendars and/or groups to query for free/busy information', 'items': {'properties': {'id': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}}, 'required': ['id'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'timeMin': {'description': "Start time boundary. Preferred: '2024-01-01T00:00:00' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T00:00:00Z' or '2024-01-01T00:00:00-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeMax': {'description': "End time boundary. Preferred: '2024-01-01T23:59:59' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T23:59:59Z' or '2024-01-01T23:59:59-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': 'Timezone for the query', 'type': <Type.STRING: 'STRING'>}, 'groupExpansionMax': {'description': 'Maximum number of calendars to expand per group (max 100)', 'maximum': 100.0, 'type': <Type.INTEGER: 'INTEGER'>}, 'calendarExpansionMax': {'description': 'Maximum number of calendars to expand (max 50)', 'maximum': 50.0, 'type': <Type.INTEGER: 'INTEGER'>}} 
+get-current-time: {'timeZone': {'description': "Optional IANA timezone (e.g., 'America/Los_Angeles', 'Europe/London', 'UTC'). If not provided, returns UTC time and system timezone for reference.", 'type': <Type.STRING: 'STRING'>}} 
+-----------------------------------------------------------
+
+2025-07-06 03:22:35,493 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-07-06 03:22:35,495 - httpcore.connection - DEBUG - connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=None socket_options=None
+2025-07-06 03:22:35,523 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7fa33cf11be0>
+2025-07-06 03:22:35,523 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7fa33d7a6a80> server_hostname='generativelanguage.googleapis.com' timeout=None
+2025-07-06 03:22:35,548 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7fa33ce59f90>
+2025-07-06 03:22:35,548 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-07-06 03:22:35,549 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-07-06 03:22:35,549 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-07-06 03:22:35,549 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-07-06 03:22:35,549 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-07-06 03:22:36,249 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=UTF-8'), (b'Vary', b'Origin'), (b'Vary', b'X-Origin'), (b'Vary', b'Referer'), (b'Content-Encoding', b'gzip'), (b'Date', b'Sun, 06 Jul 2025 01:22:36 GMT'), (b'Server', b'scaffolding on HTTPServer2'), (b'X-XSS-Protection', b'0'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'X-Content-Type-Options', b'nosniff'), (b'Server-Timing', b'gfet4t7; dur=692'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2025-07-06 03:22:36,251 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-07-06 03:22:36,252 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-07-06 03:22:36,254 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-07-06 03:22:36,255 - httpcore.http11 - DEBUG - response_closed.started
+2025-07-06 03:22:36,255 - httpcore.http11 - DEBUG - response_closed.complete
+2025-07-06 03:22:36,260 - google_genai.types - WARNING - Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+2025-07-06 03:22:36,260 - google_adk.google.adk.models.google_llm - INFO - 
+LLM Response:
+-----------------------------------------------------------
+Text:
+Chiamando MCP tool per cercare eventi...
+
+-----------------------------------------------------------
+Function calls:
+name: list-events, args: {'timeMax': '2025-07-07T23:59:59', 'calendarId': 'primary', 'timeMin': '2025-07-07T00:00:00'}
+-----------------------------------------------------------
+Raw response:
+{"sdk_http_response":{"headers":{"content-type":"application/json; charset=UTF-8","vary":"Origin, X-Origin, Referer","content-encoding":"gzip","date":"Sun, 06 Jul 2025 01:22:36 GMT","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=692","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","transfer-encoding":"chunked"}},"candidates":[{"content":{"parts":[{"text":"Chiamando MCP tool per cercare eventi...\n"},{"function_call":{"args":{"timeMax":"2025-07-07T23:59:59","calendarId":"primary","timeMin":"2025-07-07T00:00:00"},"name":"list-events"}}],"role":"model"},"finish_reason":"STOP","avg_logprobs":-0.03093660288843615}],"model_version":"gemini-2.0-flash","usage_metadata":{"candidates_token_count":58,"candidates_tokens_details":[{"modality":"TEXT","token_count":58}],"prompt_token_count":2176,"prompt_tokens_details":[{"modality":"TEXT","token_count":2176}],"total_token_count":2234},"automatic_function_calling_history":[]}
+-----------------------------------------------------------
+
+2025-07-06 03:22:36,277 - httpcore.connection - DEBUG - close.started
+2025-07-06 03:22:36,279 - httpcore.connection - DEBUG - close.complete
+2025-07-06 03:23:55,204 - asyncio - ERROR - an error occurred during closing of asynchronous generator <async_generator object stdio_client at 0x7fa33d7d2700>
+asyncgen: <async_generator object stdio_client at 0x7fa33d7d2700>
+  + Exception Group Traceback (most recent call last):
+  |   File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 772, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | BaseExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/mcp/client/stdio/__init__.py", line 179, in stdio_client
+    |     yield read_stream, write_stream
+    | GeneratorExit
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/mcp/client/stdio/__init__.py", line 173, in stdio_client
+    anyio.create_task_group() as tg,
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 778, in __aexit__
+    if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 457, in __exit__
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Attempted to exit cancel scope in a different task than it was entered in
+2025-07-06 03:24:01,878 - asyncio - DEBUG - Using selector: EpollSelector
+2025-07-06 03:24:09,611 - google_adk.google.adk.models.google_llm - INFO - Sending out request, model: gemini-2.0-flash, backend: GoogleLLMVariant.GEMINI_API, stream: False
+2025-07-06 03:24:09,612 - google_adk.google.adk.models.google_llm - INFO - 
+LLM Request:
+-----------------------------------------------------------
+System Instruction:
+
+        You are a Calendar Agent specialized in Google Calendar management using MCP tools.
+
+        CRITICAL DEBUG MODE: Your responses must show exactly what you're doing:
+
+        1. ALWAYS mention which MCP tools you are calling
+        2. ALWAYS show the exact parameters you're using
+        3. ALWAYS explain the results you get from MCP tools
+        4. If MCP tools are not working, explicitly say "MCP TOOL FAILED"
+
+        AVAILABLE MCP TOOLS:
+        You have access to Google Calendar MCP tools for:
+        - Listing calendar events
+        - Creating new events
+        - Getting calendar information
+
+        CALENDARS TO CHECK:
+        - PRIMARY: alessiopalermo34@gmail.com
+        - LAVORO: f72572c2108e8bd20c0754c6369520148284bf63d3c6807cf80dd18beb64b990@group.calendar.google.com
+        - BENESSERE: ecec45bc081eb53af85714d3ac609d392e175344eec3f702ef22c9d57c9ae4db@group.calendar.google.com
+        - SVAGO: f506b0bcf9a05458893504ce3985b11423f6196686bedb8bf1c68f71fe95db5d@group.calendar.google.com
+        - VIAGGI: 8bcc238a98b488d8b52a2cf79da1c0a86a536ed0929ef3649131dec7d07cb4e3@group.calendar.google.com
+
+        FOR "che impegni ho domani" requests:
+        1. Say "Chiamando MCP tool per cercare eventi..."
+        2. Use MCP tools to search for events on 2025-07-07
+        3. Say "MCP tool risposta: [actual result]"
+        4. Format the final answer
+
+        FOR "che calendari ho" requests:
+        1. Say "Chiamando MCP tool per lista calendari..."
+        2. Use MCP tools to list available calendars
+        3. Say "MCP tool risposta: [actual result]"
+
+        ALWAYS BE EXPLICIT about MCP tool usage in your responses.
+        DEBUG MODE: Show your work step by step.
+        
+
+You are an agent. Your internal name is "CalendarAgentDebug".
+
+ The description about you is "Calendar Agent con debug MCP completo"
+-----------------------------------------------------------
+Contents:
+{"parts":[{"text":"Che impegni ho domani?"}],"role":"user"}
+-----------------------------------------------------------
+Functions:
+list-calendars: {} 
+list-events: {'calendarId': {'description': 'ID of the calendar(s) to list events from. Accepts either a single calendar ID string or an array of calendar IDs (passed as JSON string like \'["cal1", "cal2"]\')', 'type': <Type.STRING: 'STRING'>}, 'timeMin': {'description': "Start time boundary. Preferred: '2024-01-01T00:00:00' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T00:00:00Z' or '2024-01-01T00:00:00-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeMax': {'description': "End time boundary. Preferred: '2024-01-01T23:59:59' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T23:59:59Z' or '2024-01-01T23:59:59-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Timezone as IANA Time Zone Database name (e.g., America/Los_Angeles). Takes priority over calendar's default timezone. Only used for timezone-naive datetime strings.", 'type': <Type.STRING: 'STRING'>}} 
+search-events: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'query': {'description': 'Free text search query (searches summary, description, location, attendees, etc.)', 'type': <Type.STRING: 'STRING'>}, 'timeMin': {'description': "Start time boundary. Preferred: '2024-01-01T00:00:00' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T00:00:00Z' or '2024-01-01T00:00:00-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeMax': {'description': "End time boundary. Preferred: '2024-01-01T23:59:59' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T23:59:59Z' or '2024-01-01T23:59:59-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Timezone as IANA Time Zone Database name (e.g., America/Los_Angeles). Takes priority over calendar's default timezone. Only used for timezone-naive datetime strings.", 'type': <Type.STRING: 'STRING'>}} 
+list-colors: {} 
+create-event: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'summary': {'description': 'Title of the event', 'type': <Type.STRING: 'STRING'>}, 'description': {'description': 'Description/notes for the event', 'type': <Type.STRING: 'STRING'>}, 'start': {'description': "Event start time: '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}, 'end': {'description': "Event end time: '2024-01-01T11:00:00'", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Timezone as IANA Time Zone Database name (e.g., America/Los_Angeles). Takes priority over calendar's default timezone. Only used for timezone-naive datetime strings.", 'type': <Type.STRING: 'STRING'>}, 'location': {'description': 'Location of the event', 'type': <Type.STRING: 'STRING'>}, 'attendees': {'description': 'List of attendee email addresses', 'items': {'properties': {'email': {'description': 'Email address of the attendee', 'type': <Type.STRING: 'STRING'>}}, 'required': ['email'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'colorId': {'description': 'Color ID for the event (use list-colors to see available IDs)', 'type': <Type.STRING: 'STRING'>}, 'reminders': {'description': 'Reminder settings for the event', 'properties': {'useDefault': {'description': 'Whether to use the default reminders', 'type': <Type.BOOLEAN: 'BOOLEAN'>}, 'overrides': {'description': 'Custom reminders', 'items': {'properties': {'method': {'default': 'popup', 'description': 'Reminder method', 'enum': ['email', 'popup'], 'type': <Type.STRING: 'STRING'>}, 'minutes': {'description': 'Minutes before the event to trigger the reminder', 'type': <Type.NUMBER: 'NUMBER'>}}, 'required': ['minutes'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}}, 'required': ['useDefault'], 'type': <Type.OBJECT: 'OBJECT'>}, 'recurrence': {'description': 'Recurrence rules in RFC5545 format (e.g., ["RRULE:FREQ=WEEKLY;COUNT=5"])', 'items': {'type': <Type.STRING: 'STRING'>}, 'type': <Type.ARRAY: 'ARRAY'>}} 
+update-event: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'eventId': {'description': 'ID of the event to update', 'type': <Type.STRING: 'STRING'>}, 'summary': {'description': 'Updated title of the event', 'type': <Type.STRING: 'STRING'>}, 'description': {'description': 'Updated description/notes', 'type': <Type.STRING: 'STRING'>}, 'start': {'description': "Updated start time: '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}, 'end': {'description': "Updated end time: '2024-01-01T11:00:00'", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': "Updated timezone as IANA Time Zone Database name. If not provided, uses the calendar's default timezone.", 'type': <Type.STRING: 'STRING'>}, 'location': {'description': 'Updated location', 'type': <Type.STRING: 'STRING'>}, 'attendees': {'description': 'Updated attendee list', 'items': {'properties': {'email': {'description': 'Email address of the attendee', 'type': <Type.STRING: 'STRING'>}}, 'required': ['email'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'colorId': {'description': 'Updated color ID', 'type': <Type.STRING: 'STRING'>}, 'reminders': {'description': 'Reminder settings for the event', 'properties': {'useDefault': {'description': 'Whether to use the default reminders', 'type': <Type.BOOLEAN: 'BOOLEAN'>}, 'overrides': {'description': 'Custom reminders', 'items': {'properties': {'method': {'default': 'popup', 'description': 'Reminder method', 'enum': ['email', 'popup'], 'type': <Type.STRING: 'STRING'>}, 'minutes': {'description': 'Minutes before the event to trigger the reminder', 'type': <Type.NUMBER: 'NUMBER'>}}, 'required': ['minutes'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}}, 'required': ['useDefault'], 'type': <Type.OBJECT: 'OBJECT'>}, 'recurrence': {'description': 'Updated recurrence rules', 'items': {'type': <Type.STRING: 'STRING'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'sendUpdates': {'default': 'all', 'description': 'Whether to send update notifications', 'enum': ['all', 'externalOnly', 'none'], 'type': <Type.STRING: 'STRING'>}, 'modificationScope': {'description': 'Scope for recurring event modifications', 'enum': ['thisAndFollowing', 'all', 'thisEventOnly'], 'type': <Type.STRING: 'STRING'>}, 'originalStartTime': {'description': "Original start time in the ISO 8601 format '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}, 'futureStartDate': {'description': "Start date for future instances in the ISO 8601 format '2024-01-01T10:00:00'", 'type': <Type.STRING: 'STRING'>}} 
+delete-event: {'calendarId': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}, 'eventId': {'description': 'ID of the event to delete', 'type': <Type.STRING: 'STRING'>}, 'sendUpdates': {'default': 'all', 'description': 'Whether to send cancellation notifications', 'enum': ['all', 'externalOnly', 'none'], 'type': <Type.STRING: 'STRING'>}} 
+get-freebusy: {'calendars': {'description': 'List of calendars and/or groups to query for free/busy information', 'items': {'properties': {'id': {'description': "ID of the calendar (use 'primary' for the main calendar)", 'type': <Type.STRING: 'STRING'>}}, 'required': ['id'], 'type': <Type.OBJECT: 'OBJECT'>}, 'type': <Type.ARRAY: 'ARRAY'>}, 'timeMin': {'description': "Start time boundary. Preferred: '2024-01-01T00:00:00' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T00:00:00Z' or '2024-01-01T00:00:00-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeMax': {'description': "End time boundary. Preferred: '2024-01-01T23:59:59' (uses timeZone parameter or calendar timezone). Also accepts: '2024-01-01T23:59:59Z' or '2024-01-01T23:59:59-08:00'.", 'type': <Type.STRING: 'STRING'>}, 'timeZone': {'description': 'Timezone for the query', 'type': <Type.STRING: 'STRING'>}, 'groupExpansionMax': {'description': 'Maximum number of calendars to expand per group (max 100)', 'maximum': 100.0, 'type': <Type.INTEGER: 'INTEGER'>}, 'calendarExpansionMax': {'description': 'Maximum number of calendars to expand (max 50)', 'maximum': 50.0, 'type': <Type.INTEGER: 'INTEGER'>}} 
+get-current-time: {'timeZone': {'description': "Optional IANA timezone (e.g., 'America/Los_Angeles', 'Europe/London', 'UTC'). If not provided, returns UTC time and system timezone for reference.", 'type': <Type.STRING: 'STRING'>}} 
+-----------------------------------------------------------
+
+2025-07-06 03:24:09,612 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-07-06 03:24:09,614 - httpcore.connection - DEBUG - connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=None socket_options=None
+2025-07-06 03:24:09,642 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7f19530cdbe0>
+2025-07-06 03:24:09,642 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7f19539bab10> server_hostname='generativelanguage.googleapis.com' timeout=None
+2025-07-06 03:24:09,668 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7f1953015f90>
+2025-07-06 03:24:09,668 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-07-06 03:24:09,668 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-07-06 03:24:09,668 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-07-06 03:24:09,668 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-07-06 03:24:09,668 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-07-06 03:24:10,385 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json; charset=UTF-8'), (b'Vary', b'Origin'), (b'Vary', b'X-Origin'), (b'Vary', b'Referer'), (b'Content-Encoding', b'gzip'), (b'Date', b'Sun, 06 Jul 2025 01:24:10 GMT'), (b'Server', b'scaffolding on HTTPServer2'), (b'X-XSS-Protection', b'0'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'X-Content-Type-Options', b'nosniff'), (b'Server-Timing', b'gfet4t7; dur=709'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2025-07-06 03:24:10,387 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-07-06 03:24:10,388 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-07-06 03:24:10,390 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-07-06 03:24:10,391 - httpcore.http11 - DEBUG - response_closed.started
+2025-07-06 03:24:10,391 - httpcore.http11 - DEBUG - response_closed.complete
+2025-07-06 03:24:10,397 - google_genai.types - WARNING - Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+2025-07-06 03:24:10,397 - google_adk.google.adk.models.google_llm - INFO - 
+LLM Response:
+-----------------------------------------------------------
+Text:
+Chiamando MCP tool per cercare eventi...
+
+-----------------------------------------------------------
+Function calls:
+name: list-events, args: {'timeMin': '2025-07-07T00:00:00', 'timeMax': '2025-07-07T23:59:59', 'calendarId': 'primary'}
+-----------------------------------------------------------
+Raw response:
+{"sdk_http_response":{"headers":{"content-type":"application/json; charset=UTF-8","vary":"Origin, X-Origin, Referer","content-encoding":"gzip","date":"Sun, 06 Jul 2025 01:24:10 GMT","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=709","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","transfer-encoding":"chunked"}},"candidates":[{"content":{"parts":[{"text":"Chiamando MCP tool per cercare eventi...\n"},{"function_call":{"args":{"timeMin":"2025-07-07T00:00:00","timeMax":"2025-07-07T23:59:59","calendarId":"primary"},"name":"list-events"}}],"role":"model"},"finish_reason":"STOP","avg_logprobs":-0.00697231806557754}],"model_version":"gemini-2.0-flash","usage_metadata":{"candidates_token_count":58,"candidates_tokens_details":[{"modality":"TEXT","token_count":58}],"prompt_token_count":2176,"prompt_tokens_details":[{"modality":"TEXT","token_count":2176}],"total_token_count":2234},"automatic_function_calling_history":[]}
+-----------------------------------------------------------
+
+2025-07-06 03:24:10,416 - httpcore.connection - DEBUG - close.started
+2025-07-06 03:24:10,417 - httpcore.connection - DEBUG - close.complete
+2025-07-06 03:28:32,882 - asyncio - ERROR - an error occurred during closing of asynchronous generator <async_generator object stdio_client at 0x7f19539ea700>
+asyncgen: <async_generator object stdio_client at 0x7f19539ea700>
+  + Exception Group Traceback (most recent call last):
+  |   File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 772, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | BaseExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/mcp/client/stdio/__init__.py", line 179, in stdio_client
+    |     yield read_stream, write_stream
+    | GeneratorExit
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/mcp/client/stdio/__init__.py", line 173, in stdio_client
+    anyio.create_task_group() as tg,
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 778, in __aexit__
+    if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/alessio/Volume/Project/ADK/AgenteDef2/adk_env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 457, in __exit__
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Attempted to exit cancel scope in a different task than it was entered in

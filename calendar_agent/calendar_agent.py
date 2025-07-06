@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Calendar Agent - Vero LlmAgent ADK + A2A Server + MCP Google Calendar
-Architettura distribuita A2A corretta
+Versione STABILE con timeout anti-blocco
 """
 
 import asyncio
@@ -16,8 +16,6 @@ from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParamet
 from google.genai import types
 from dotenv import load_dotenv
 import datetime
-import threading
-import json
 
 # Carica environment
 load_dotenv()
@@ -28,41 +26,35 @@ load_dotenv()
 
 AGENT_CARD = {
     "name": "CalendarAgent",
-    "description": "Agente AI specializzato nella gestione Google Calendar con intelligenza naturale",
+    "description": "Agente AI specializzato Google Calendar con timeout anti-blocco",
     "url": "http://localhost:8001",
     "skills": [
         {
             "id": "calendar_management",
-            "name": "Gestione calendario intelligente",
-            "description": "Gestisce eventi, trova tempo libero, analizza calendario con AI"
+            "name": "Gestione calendario veloce",
+            "description": "Gestisce eventi calendario con timeout 10s garantito"
         }
     ],
     "capabilities": {
         "streaming": False,
         "pushNotifications": False,
         "ai_powered": True,
-        "natural_language": True
+        "timeout_protected": True
     },
     "defaultInputModes": ["text"],
     "defaultOutputModes": ["text"]
 }
 
 # ═══════════════════════════════════════════════════════════════
-# CALENDAR AGENT (LlmAgent ADK + MCP Tool)
+# CALENDAR AGENT (LlmAgent ADK + MCP Tool) - VERSIONE STABILE
 # ═══════════════════════════════════════════════════════════════
 
 def create_calendar_agent():
     """
-    Crea il vero Calendar Agent - LlmAgent ADK specializzato calendario
-
-    Usa MCP Google Calendar Server come tool per accesso calendario reale
+    Crea il Calendar Agent con timeout protection
     """
 
-    # ═══════════════════════════════════════════════════════════════
-    # MCP GOOGLE CALENDAR SERVER
-    # ═══════════════════════════════════════════════════════════════
-
-    # Path per credentials (cerca in diverse posizioni)
+    # Trova credentials
     credentials_paths = [
         "gcp-oauth.keys.json",
         "../gcp-oauth.keys.json",
@@ -80,92 +72,72 @@ def create_calendar_agent():
 
     if not credentials_path:
         print("❌ ERRORE: File credentials non trovato!")
-        print("💡 Posiziona gcp-oauth.keys.json o credentials.json in:")
-        for path in credentials_paths[:4]:
-            print(f"   - {path}")
         return None
 
     print(f"✅ Credentials trovate: {credentials_path}")
 
-    # Configurazione MCP Google Calendar Server (nspady/google-calendar-mcp)
-    # Usa il server che hai già configurato
-    google_calendar_mcp = MCPToolset(
-        connection_params=StdioServerParameters(
-            command="npx",
-            args=[
-                "@cocal/google-calendar-mcp"
-            ],
-            env={
-                "GOOGLE_OAUTH_CREDENTIALS": credentials_path,
-                "LANG": "C.UTF-8",
-                "LC_ALL": "C.UTF-8"
-            },
-            encoding="utf-8"
+    # Configurazione MCP Google Calendar Server
+    try:
+        google_calendar_mcp = MCPToolset(
+            connection_params=StdioServerParameters(
+                command="npx",
+                args=["@cocal/google-calendar-mcp"],
+                env={
+                    "GOOGLE_OAUTH_CREDENTIALS": credentials_path,
+                    "LANG": "C.UTF-8",
+                    "LC_ALL": "C.UTF-8"
+                },
+                encoding="utf-8"
+            )
         )
-    )
+        print("✅ MCP Toolset creato")
 
-    # ═══════════════════════════════════════════════════════════════
-    # CALENDAR AGENT (LlmAgent Specializzato)
-    # ═══════════════════════════════════════════════════════════════
+    except Exception as e:
+        print(f"❌ Errore MCP setup: {e}")
+        return None
 
+    # Calendar Agent con prompt ottimizzato
     calendar_agent = LlmAgent(
         name="CalendarAgent",
         model="gemini-2.0-flash",
         instruction="""
-        Sei Calendar Agent, un assistente AI specializzato nella gestione Google Calendar.
+        You are a Calendar Agent with access to Google Calendar via MCP tools.
 
-        🎯 TUA MISSIONE:
-        Gestire richieste calendario con intelligenza naturale usando Google Calendar reale.
+        IMPORTANT: When you use MCP tools, you get REAL results. Use those results in your response.
 
-        🔧 STRUMENTI DISPONIBILI:
-        - MCPToolset Google Calendar: accesso completo al calendario dell'utente
-        - Puoi leggere eventi, creare eventi, modificare, eliminare
-        - Puoi analizzare disponibilità e suggerire orari
+        AVAILABLE TOOLS:
+        - list-events: Gets real events from a calendar
+        - list-calendars: Gets real list of available calendars
+        - search-events: Searches for specific events
 
-        📋 CAPACITÀ SPECIALIZZATE:
+        EXAMPLES OF CORRECT BEHAVIOR:
 
-        ✅ LETTURA CALENDARIO:
-        - "Che impegni ho domani?" → Usa MCP per leggere eventi domani
-        - "Sono libero giovedì?" → Controlla disponibilità
-        - "Che riunioni ho questa settimana?" → Lista eventi settimanali
+        User: "che impegni ho domani?"
+        1. Call list-events for primary calendar for tomorrow (2025-07-07)
+        2. If tool returns "no events found" → Say "Non ci sono eventi domani nel calendario principale"
+        3. If tool returns events → List the actual events with times and details
 
-        ✅ ANALISI INTELLIGENTE:
-        - Interpreta linguaggio naturale per date (domani, prossima settimana, etc.)
-        - Raggruppa eventi per data logicamente
-        - Calcola tempo libero e conflitti
+        User: "che calendari ho?"
+        1. Call list-calendars
+        2. Show the EXACT calendar list returned by the tool
 
-        ✅ CREAZIONE EVENTI:
-        - "Crea riunione team lunedì alle 10" → Usa MCP per creare evento
-        - Suggerisci orari liberi se richiesto
+        User: "controlla calendario X"
+        1. Use the calendar name/ID from list-calendars results
+        2. Call list-events for that specific calendar
+        3. Report the actual results
 
-        ✅ COMUNICAZIONE NATURALE:
-        - Rispondi in italiano conversazionale
-        - Formatta liste eventi in modo leggibile
-        - Usa emoji appropriati (📅 🕐 📍)
-        - Sii specifico su date e orari
+        CRITICAL: Always use the ACTUAL results from MCP tools in your responses.
+        Don't make up information. If tools return data, use that data exactly.
 
-        🚨 COMPORTAMENTO:
-        - Sempre usa MCP tools per accesso calendario reale
-        - Non inventare mai eventi fake
-        - Se MCP non risponde, spiega il problema
-        - Gestisci errori con grazia
-        - Sii proattivo nel suggerire soluzioni
-
-        💬 STILE COMUNICAZIONE:
-        - Professionale ma amichevole
-        - Conciso ma completo
-        - Evidenzia informazioni importanti
-        - Offri azioni follow-up quando appropriato
-
-        Sei l'esperto calendario dell'ecosistema A2A!
+        Respond in Italian. Be specific about which calendar you checked and what you found.
         """,
-        description="AI Agent specializzato Google Calendar con MCP integration",
+        description="Calendar Agent con MCP tools integration",
         tools=[google_calendar_mcp]
     )
 
-    print("🤖 Calendar Agent (LlmAgent) creato con successo!")
+    print("🤖 Calendar Agent creato!")
     print(f"🔧 Tool: Google Calendar MCP Server")
-    print(f"🧠 Modello: gemini-2.0-flash")
+    print(f"🧠 Modello: gemini-2.0-flash (compatibile ADK)")
     print(f"📁 Credentials: {credentials_path}")
 
     return calendar_agent
@@ -174,13 +146,13 @@ def create_calendar_agent():
 # A2A SERVER (FastAPI per comunicazione con Foreman)
 # ═══════════════════════════════════════════════════════════════
 
-app = FastAPI(title="Calendar Agent A2A Server")
+app = FastAPI(title="Calendar Agent A2A Server - Timeout Protected")
 
 # Variabili globali per Agent e Runner
 calendar_agent = None
 calendar_runner = None
 session_service = None
-app_name = "CalendarAgent_A2A"
+app_name = "CalendarAgent_A2A_Stable"
 
 async def initialize_calendar_agent():
     """Inizializza Calendar Agent ADK"""
@@ -227,12 +199,27 @@ async def get_agent_card():
     """AgentCard A2A endpoint"""
     return AGENT_CARD
 
+async def _process_calendar_request(content, user_id, session_id):
+    """Process calendar request con timeout interno"""
+    try:
+        response_text = ""
+        async for event in calendar_runner.run_async(
+            new_message=content,
+            user_id=user_id,
+            session_id=session_id
+        ):
+            if event.is_final_response():
+                response_text = event.content.parts[0].text
+                break
+
+        return response_text if response_text else "❌ Nessuna risposta dall'agent"
+
+    except Exception as e:
+        return f"❌ Errore interno: {str(e)}"
+
 @app.post("/tasks/send")
 async def handle_a2a_task(task_data: dict):
-    """
-    A2A Task endpoint - riceve richieste da Foreman
-    Usa il vero Calendar Agent per processare
-    """
+    """A2A Task endpoint con TIMEOUT PROTECTION"""
     print(f"📅 Calendar Agent ricevuto A2A task: {task_data}")
 
     if not calendar_agent or not calendar_runner:
@@ -263,18 +250,23 @@ async def handle_a2a_task(task_data: dict):
             parts=[types.Part(text=message)]
         )
 
-        # Chiama Calendar Agent (vero LlmAgent con MCP)
+        # Chiama Calendar Agent con TIMEOUT AGGRESSIVO
         print(f"🤖 Calendar Agent processando: '{message}'")
 
-        response_text = ""
-        async for event in calendar_runner.run_async(
-            new_message=content,
-            user_id=user_id,
-            session_id=session_id
-        ):
-            if event.is_final_response():
-                response_text = event.content.parts[0].text
-                break
+        try:
+            # TIMEOUT AGGRESSIVO per evitare blocchi
+            timeout_task = asyncio.wait_for(
+                _process_calendar_request(content, user_id, session_id),
+                timeout=10.0  # 10 secondi MAX
+            )
+
+            response_text = await timeout_task
+
+        except asyncio.TimeoutError:
+            response_text = "⏰ TIMEOUT: Calendar Agent ha impiegato troppo tempo (>10s). Prova richiesta più semplice."
+            print("⚠️ Calendar Agent timeout after 10s")
+        except Exception as e:
+            response_text = f"❌ Errore during processing: {str(e)}"
 
         if not response_text:
             response_text = "❌ Nessuna risposta dal Calendar Agent"
@@ -293,7 +285,7 @@ async def handle_a2a_task(task_data: dict):
         }
 
     except Exception as e:
-        error_msg = f"❌ Errore Calendar Agent A2A: {str(e)}"
+        error_msg = f"❌ Errore Calendar Agent: {str(e)}"
         print(error_msg)
 
         return {
@@ -313,6 +305,7 @@ async def health_check():
         "calendar_agent": agent_status,
         "calendar_runner": runner_status,
         "mcp_tools": len(calendar_agent.tools) if calendar_agent else 0,
+        "version": "TIMEOUT_PROTECTED - 10s max per request",
         "timestamp": datetime.datetime.now().isoformat()
     }
 
@@ -321,8 +314,8 @@ async def health_check():
 # ═══════════════════════════════════════════════════════════════
 
 def main():
-    """Entry point Calendar Agent A2A Server"""
-    print("🎯 Calendar Agent A2A Server - Vero LlmAgent + MCP + A2A")
+    """Entry point Calendar Agent A2A Server - TIMEOUT PROTECTED"""
+    print("🎯 Calendar Agent A2A Server - Timeout Protection Attivo")
     print("=" * 60)
 
     # Verifica setup
@@ -356,7 +349,6 @@ def main():
         print("✅ Google Calendar credentials trovate")
     else:
         print("❌ Google Calendar credentials mancanti")
-        print("💡 Posiziona gcp-oauth.keys.json o credentials.json nella directory")
         return
 
     print("✅ Setup verificato!")
@@ -367,11 +359,12 @@ def main():
     print("   ↓ MCP stdio")
     print("   Google Calendar MCP Server (Node.js)")
 
-    print(f"\n📡 Avviando Calendar Agent A2A Server su http://localhost:8001")
+    print(f"\n📡 Avviando Calendar Agent con TIMEOUT PROTECTION su http://localhost:8001")
     print("🔗 Endpoints:")
     print("   GET  /.well-known/agent.json")
     print("   POST /tasks/send")
     print("   GET  /health")
+    print("⏰ TIMEOUT: 10 secondi massimo per richiesta")
 
     # Avvia server FastAPI
     uvicorn.run(app, host="localhost", port=8001)
