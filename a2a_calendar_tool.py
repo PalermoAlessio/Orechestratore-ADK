@@ -24,7 +24,7 @@ async def a2a_calendar_check(query: str) -> str:
     calendar_url = "http://localhost:8001"
 
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with httpx.AsyncClient(timeout=35.0) as client:
             # 1. Scarica AgentCard (discovery)
             try:
                 card_response = await client.get(
