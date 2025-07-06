@@ -52,6 +52,7 @@ Questo README funge da traccia vivente dello sviluppo.
 - [x] **Prima Integrazione MCP:** Integrato e testato con successo il server **File System MCP**.
 - [x] **Integrazione Ricerca Web:** Aggiunta la capacità di ricerca web (Google Search ADK).
 - [x] **Integrazione Google Calendar:** Aggiunta la capacità di gestione del calendario tramite MCP.
+- [x] **Integrazione Google Sheets:** Aggiunta la capacità di gestione dei fogli di calcolo tramite MCP.
 
 #### **Settimana 2: Multi-Tool Foundation**
 - [x] **Prompt Engineering v1:** Implementata la logica di base per la selezione degli strumenti e la gestione del contesto temporale.
@@ -64,7 +65,8 @@ Questo README funge da traccia vivente dello sviluppo.
 ### **Phase 3: Productivity Tools (Non Iniziato)**
 - [ ] **Trascrizione Audio:** Integrazione con Whisper MCP.
 - [ ] **Elaborazione Documenti:** Integrazione con PDF MCP.
-- [x] **Gestione Calendario:** Integrazione con Google Calendar MCP.
+- [ ] **Gestione Calendario:** Integrazione con Google Calendar MCP.
+- [ ] **Migliorare il prompt per la gestione di Google Sheets:** Assicurarsi che l'agente sappia già quale foglio usare e dove trovare tutte le informazioni necessarie per la gestione delle spese.
 
 ### **Phase 4: Polish & Production (Non Iniziato)**
 - [ ] **Ottimizzazione Performance:** Caching, pooling delle connessioni MCP.

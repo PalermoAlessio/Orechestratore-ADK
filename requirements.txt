@@ -4,3 +4,7 @@ python-dotenv>=1.0.0
 mcp>=1.10.0,<2.0.0
 httpx>=0.25.0
 anyio>=4.0.0
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+Flask

@@ -64,14 +64,33 @@ def create_orchestrator():
     # ═══════════════════════════════════════════════════════════════
     # MCP GOOGLE CALENDAR
     # ═══════════════════════════════════════════════════════════════
-    credentials_path = os.path.abspath("google-credentials.json")
+    calendar_credentials_path = os.path.abspath("google-credentials.json")
+    sheets_credentials_path = os.path.abspath("google-credentials2.json")
 
     calendar_mcp = MCPToolset(
         connection_params=StdioServerParameters(
             command="npx",
             args=["@cocal/google-calendar-mcp"],
             env={
-                "GOOGLE_OAUTH_CREDENTIALS": credentials_path,
+                "GOOGLE_OAUTH_CREDENTIALS": calendar_credentials_path,
+                "LANG": "C.UTF-8",
+                "LC_ALL": "C.UTF-8",
+            },
+            encoding="utf-8"
+        )
+    )
+
+
+    # ═══════════════════════════════════════════════════════════════
+    # MCP GOOGLE SHEETS
+    # ═══════════════════════════════════════════════════════════════
+    sheets_mcp = MCPToolset(
+        connection_params=StdioServerParameters(
+            command="uvx",
+            args=["mcp-google-sheets@latest"],
+            env={
+                "GOOGLE_APPLICATION_CREDENTIALS": sheets_credentials_path,
+                "GOOGLE_SHEETS_SCOPES": "https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive",
                 "LANG": "C.UTF-8",
                 "LC_ALL": "C.UTF-8",
             },
@@ -101,14 +120,25 @@ Uso queste informazioni per interpretare correttamente le tue richieste temporal
 </system_info>
 
 <available_tools>
-Orchestro tre categorie di strumenti MCP per completare i tuoi task:
+Orchestro quattro categorie di strumenti MCP per completare i tuoi task:
 
 **🗂️ GESTIONE FILE** - Operazioni su file system locale
 **🌐 RICERCA WEB** - Accesso a informazioni aggiornate online
 **📅 GESTIONE CALENDARIO** - Controllo e gestione eventi Google Calendar
+**📊 GESTIONE FOGLI GOOGLE** - Interazione con Google Sheets per la gestione delle spese
 
 I server MCP forniscono le proprie descrizioni tecniche dettagliate. La mia responsabilità è selezionare e coordinare gli strumenti giusti per ogni specifica richiesta.
 </available_tools>
+
+<sheet_info>
+Colonne:
+- ID(A) : colonna con l'ID della transazione da mettere sempre in ordine crescente
+- DATA(B) : colonna con la data da impostare in base alla richiesta dell'utente o usare quella corrente se non specificato.
+- ITEM(C) : Una descrizione rielaborata della spesa dell'utente
+- CATEGORIA(D) : colonna nellla quale inserire la categoria scegliendo accuratamente tra quelle presenti :Salary, Travel, Tech, Health, Other, Food, Alcool, Shopping, Transport, Fun, Sport, Gift, Income
+- IMPORTO(E) : colonna nella quale inserire l'importo della spesa comunicata dall'utente nel seguente formato es. 12,45  1734,56...
+- TIPO(F) : colonna nella quale inserire: Entrata o Uscita in base a cosa comunica l'utente.
+</sheet_info>
 
 <calendar_configuration>
 Ho accesso ai tuoi calendari organizzati per categorie. Ecco come li gestisco:
@@ -160,13 +190,15 @@ Per task complessi, orchesto sequenze di strumenti mantenendo contesto tra le ch
             search_agent_tool,
             filesystem_mcp,
             calendar_mcp,
+            sheets_mcp,
         ]
     )
 
     print(f"🎯 Foreman v2.0 Single-Agent - Architettura Semplificata")
     print(f"🌐 GoogleSearch: ✅ ATTIVATO")
     print(f"📁 MCP Filesystem: ✅ ATTIVATO")
-    print(f"📅 Google Calendar: ✅ ATTIVATO (Verifica credenziali in '{credentials_path}')")
+    print(f"📅 Google Calendar: ✅ ATTIVATO (Verifica credenziali in '{calendar_credentials_path}')")
+    print(f"📊 Google Sheets: ✅ ATTIVATO (Verifica credenziali in '{sheets_credentials_path}')")
     print(f"📁 Workspace: {work_directory}")
     print(f"✨ Ready for single-agent workflows!")
 
