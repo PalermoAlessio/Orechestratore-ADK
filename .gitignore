@@ -1,3 +1,4 @@
 adk_env/
 .env
-__pycache__/
+__pycache__/calendar_agent/gcp-oauth.keys.json
+*.keys.json
