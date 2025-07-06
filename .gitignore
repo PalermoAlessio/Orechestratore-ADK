@@ -2,3 +2,4 @@ adk_env/
 .env
 __pycache__/calendar_agent/gcp-oauth.keys.json
 *.keys.json
+google-credentials.json
