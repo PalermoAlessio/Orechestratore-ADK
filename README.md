@@ -50,10 +50,11 @@ Questo README funge da traccia vivente dello sviluppo.
 - [x] **Ambiente di Sviluppo:** Setup dell'ambiente virtuale Python e installazione ADK.
 - [x] **Agente Base:** Creata la struttura iniziale del progetto con un LlmAgent e interfaccia terminale.
 - [x] **Prima Integrazione MCP:** Integrato e testato con successo il server **File System MCP**.
-- [ ] **Integrazione Ricerca Web:** Aggiungere la capacità di ricerca web (Brave Search MCP o Google Search ADK).
+- [x] **Integrazione Ricerca Web:** Aggiunta la capacità di ricerca web (Google Search ADK).
+- [x] **Integrazione Google Calendar:** Aggiunta la capacità di gestione del calendario tramite MCP.
 
 #### **Settimana 2: Multi-Tool Foundation**
-- [ ] **Prompt Engineering v1:** Implementare la logica di base per la selezione degli strumenti.
+- [x] **Prompt Engineering v1:** Implementata la logica di base per la selezione degli strumenti e la gestione del contesto temporale.
 - [ ] **Testing Framework:** Impostare test unitari e di integrazione.
 
 ### **Phase 2: Knowledge & Memory (Non Iniziato)**
@@ -63,7 +64,7 @@ Questo README funge da traccia vivente dello sviluppo.
 ### **Phase 3: Productivity Tools (Non Iniziato)**
 - [ ] **Trascrizione Audio:** Integrazione con Whisper MCP.
 - [ ] **Elaborazione Documenti:** Integrazione con PDF MCP.
-- [ ] **Gestione Calendario:** Integrazione con Google Calendar MCP.
+- [x] **Gestione Calendario:** Integrazione con Google Calendar MCP.
 
 ### **Phase 4: Polish & Production (Non Iniziato)**
 - [ ] **Ottimizzazione Performance:** Caching, pooling delle connessioni MCP.
@@ -99,3 +100,4 @@ Questo README funge da traccia vivente dello sviluppo.
 5.  **Interagisci con l'agente:**
     *   `"Crea un file di prova chiamato test.txt"`
     *   `"Leggi il file test.txt"`
+    *   `"Aggiungi il dentista domani dalle 20 alle 21"`
